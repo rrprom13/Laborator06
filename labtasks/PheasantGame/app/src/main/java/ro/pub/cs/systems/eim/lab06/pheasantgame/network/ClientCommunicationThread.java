@@ -58,8 +58,60 @@ public class ClientCommunicationThread extends Thread {
         try {
             BufferedReader responseReader = Utilities.getReader(socket);
             PrintWriter requestPrintWriter = Utilities.getWriter(socket);
-
             // TODO exercise 7b
+            String wordSent;
+            do {
+                wordSent = wordEditText.getText().toString();
+            } while (wordSent.length() <= 2);
+            mostRecentWordSent = wordSent;
+
+            requestPrintWriter.println(mostRecentWordSent);
+            String history = clientHistoryTextView.getText().toString();
+            history += "Client sent " + mostRecentWordSent + " to server.\n";
+            final String toWrite = history;
+
+            handler.post(new Runnable() {
+                public void run() {
+                    clientHistoryTextView.setText(toWrite);
+                }
+            });
+
+            if (mostRecentWordSent.equals(Constants.END_GAME)) {
+                wordEditText.setEnabled(false);
+                sendButton.setEnabled(false);
+                return;
+            }
+
+            String receivedWord;
+            do {
+                receivedWord = responseReader.readLine();
+            } while (receivedWord == null);
+
+            history = clientHistoryTextView.getText().toString();
+            history += "Client received " + receivedWord + " from server.\n";
+            final String toWrite2 = history;
+
+            handler.post(new Runnable() {
+                public void run() {
+                    clientHistoryTextView.setText(toWrite2);
+                }
+            });
+
+            if (receivedWord.equals(Constants.END_GAME)) {
+                wordEditText.setEnabled(false);
+                sendButton.setEnabled(false);
+                return;
+            }
+            if (!receivedWord.equals(mostRecentWordSent)) {
+                mostRecentValidPrefix = receivedWord.substring(receivedWord.length() - 2, receivedWord.length());
+            }
+
+            final String finalPrefix = mostRecentValidPrefix;
+            handler.post(new Runnable() {
+                public void run() {
+                    wordEditText.setText(finalPrefix);
+                }
+            });
 
         } catch (IOException ioException) {
             Log.e(Constants.TAG, "An exception has occurred: " + ioException.getMessage());

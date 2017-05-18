@@ -2,6 +2,7 @@ package ro.pub.cs.systems.eim.lab06.pheasantgame.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class ServerFragment extends Fragment {
 
         serverHistoryTextView = (TextView)getActivity().findViewById(R.id.server_history_text_view);
 
-        serverThread = new ServerThread(serverHistoryTextView);
+        serverThread = new ServerThread(serverHistoryTextView, getActivity(), new Handler());
         serverThread.start();
     }
 
