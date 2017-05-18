@@ -53,4 +53,11 @@ public class SingleThreadedServerActivity extends AppCompatActivity {
     // TODO exercise 5b
     // overwrite method onDestroy() in order to stop the serverThread on it
     // only if it has been initialized before
+    @Override
+    public void onDestroy() {
+        if (serverThread != null) {
+            serverThread.stopServer();
+        }
+        super.onDestroy();
+    }
 }

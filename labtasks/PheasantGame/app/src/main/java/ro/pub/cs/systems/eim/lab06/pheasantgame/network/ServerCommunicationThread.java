@@ -39,7 +39,8 @@ public class ServerCommunicationThread extends Thread {
             PrintWriter responsePrintWriter = Utilities.getWriter(socket);
 
             while (isRunning) {
-
+                String line = requestReader.readLine();
+                Log.i(Constants.TAG, line);
                 // TODO exercise 7a
 
             }
